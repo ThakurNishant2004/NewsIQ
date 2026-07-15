@@ -1,0 +1,53 @@
+# ----------------------- Environment / Secrets -----------------------
+.env
+*.env
+!.env.example
+
+# ----------------------- Python -----------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+
+# ----------------------- Virtual environments -----------------------
+venv/
+env/
+ENV/
+.venv/
+
+# ----------------------- Jupyter -----------------------
+.ipynb_checkpoints/
+
+# ----------------------- Model / cache downloads -----------------------
+# HuggingFace transformer models, spaCy models, NLTK data downloaded at runtime
+*.bin
+*.pt
+*.h5
+*.onnx
+transformers_cache/
+.cache/
+nltk_data/
+
+# ----------------------- Streamlit -----------------------
+.streamlit/
+
+# ----------------------- OS / Editor junk -----------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# ----------------------- Logs -----------------------
+*.log
+
+# ----------------------- Test / coverage -----------------------
+.pytest_cache/
+.coverage
+htmlcov/

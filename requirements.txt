@@ -1,0 +1,30 @@
+# Web interface
+streamlit>=1.35.0
+
+# Core NLP
+nltk>=3.8.1
+spacy>=3.7.0
+
+# Transformer models (summarization + sentiment)
+transformers>=4.41.0
+torch>=2.2.0
+
+# Extractive summarization fallback
+sumy>=0.11.0
+
+# Keyword extraction
+scikit-learn>=1.4.0
+rake-nltk>=1.0.6
+
+# Article fetching from URL
+newspaper3k>=0.2.8
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+lxml[html_clean]>=5.2.0
+
+# LLM providers for the QA / prompt-engineering module
+anthropic>=0.34.0
+openai>=1.30.0
+
+# Environment variable management
+python-dotenv>=1.0.1
