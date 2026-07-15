@@ -10,6 +10,12 @@ important events. This system summarizes lengthy news articles, identifies
 sentiment, extracts important entities/keywords, and answers user queries
 related to the article — all through a simple web interface.
 
+## 🔗 Live Demo
+
+The app is deployed and live here: **[Try it out](https://thakurnishant2004-newsiq-app-mob4lo.streamlit.app/)**
+
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://thakurnishant2004-newsiq-app-mob4lo.streamlit.app/)
+
 ## 2. Project Architecture
 
 ```
