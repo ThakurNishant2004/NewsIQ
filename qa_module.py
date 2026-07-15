@@ -5,6 +5,7 @@ Answers user questions about a news article using prompt engineering
 with a Large Language Model (LLM). Supports two pluggable providers —
 Anthropic Claude and OpenAI GPT — selected via config.LLM_PROVIDER.
 
+
 This module demonstrates prompt engineering techniques:
   1. Role assignment      -> tells the model to act as a "news analyst"
   2. Grounded context     -> injects the article text as the ONLY source
@@ -13,17 +14,23 @@ This module demonstrates prompt engineering techniques:
   4. Output formatting    -> asks for concise, direct answers
 """
 
+
 import logging
 from typing import List, Dict
 
+
 import config
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
+
+
 SYSTEM_PROMPT = """You are a careful, factual news analyst assistant.
 You will be given the full text of a news article and a user question.
+
 
 Rules you MUST follow:
 - Answer using ONLY information present in the article.
@@ -33,6 +40,8 @@ Rules you MUST follow:
 - Keep answers concise (2-4 sentences) unless the user asks for detail.
 - If useful, quote the exact relevant phrase from the article in quotes.
 """
+
+
 
 
 def _build_user_prompt(article_text: str, question: str,
@@ -48,6 +57,7 @@ def _build_user_prompt(article_text: str, question: str,
         )
         history_block = f"\nPrevious conversation:\n{turns}\n"
 
+
     prompt = f"""ARTICLE:
 \"\"\"
 {article_text}
@@ -55,19 +65,48 @@ def _build_user_prompt(article_text: str, question: str,
 {history_block}
 QUESTION: {question}
 
+
 Answer the question strictly based on the ARTICLE above."""
     return prompt
+
+
+def _ask_gemini(article_text: str, question: str,
+                chat_history: List[Dict] = None) -> str:
+
+
+    user_prompt = _build_user_prompt(
+        article_text,
+        question,
+        chat_history
+    )
+
+
+    response = config.client.models.generate_content(
+        model=config.GEMINI_MODEL,
+        contents=[
+            SYSTEM_PROMPT,
+            user_prompt
+        ]
+    )
+
+
+    return response.text
+
+
 
 
 def _ask_anthropic(article_text: str, question: str,
                     chat_history: List[Dict] = None) -> str:
     import anthropic
 
+
     if not config.ANTHROPIC_API_KEY:
         raise RuntimeError("ANTHROPIC_API_KEY is not set in the environment.")
 
+
     client = anthropic.Anthropic(api_key=config.ANTHROPIC_API_KEY)
     user_prompt = _build_user_prompt(article_text, question, chat_history)
+
 
     response = client.messages.create(
         model=config.ANTHROPIC_MODEL,
@@ -79,15 +118,20 @@ def _ask_anthropic(article_text: str, question: str,
     return "".join(block.text for block in response.content if block.type == "text")
 
 
+
+
 def _ask_openai(article_text: str, question: str,
                  chat_history: List[Dict] = None) -> str:
     from openai import OpenAI
 
+
     if not config.OPENAI_API_KEY:
         raise RuntimeError("OPENAI_API_KEY is not set in the environment.")
 
+
     client = OpenAI(api_key=config.OPENAI_API_KEY)
     user_prompt = _build_user_prompt(article_text, question, chat_history)
+
 
     response = client.chat.completions.create(
         model=config.OPENAI_MODEL,
@@ -101,6 +145,8 @@ def _ask_openai(article_text: str, question: str,
     return response.choices[0].message.content
 
 
+
+
 def answer_question(article_text: str, question: str,
                      chat_history: List[Dict] = None) -> str:
     """
@@ -111,19 +157,38 @@ def answer_question(article_text: str, question: str,
     if not article_text.strip() or not question.strip():
         return "Please provide both an article and a question."
 
+
     try:
-        if config.LLM_PROVIDER == "anthropic":
-            return _ask_anthropic(article_text, question, chat_history)
+        if config.LLM_PROVIDER == "gemini":
+            return _ask_gemini(
+                article_text,
+                question,
+                chat_history
+            )
+        elif config.LLM_PROVIDER == "anthropic":
+            return _ask_anthropic(
+                article_text,
+                question,
+                chat_history
+            )
         elif config.LLM_PROVIDER == "openai":
-            return _ask_openai(article_text, question, chat_history)
+            return _ask_openai(
+                article_text,
+                question,
+                chat_history
+            )
         else:
-            raise ValueError(f"Unknown LLM_PROVIDER: {config.LLM_PROVIDER}")
+            raise ValueError(
+                f"Unknown LLM_PROVIDER: {config.LLM_PROVIDER}"
+            )
     except Exception as exc:
         logger.error("QA request failed: %s", exc)
         return (
             "Sorry, I couldn't reach the language model to answer that "
             f"question. (Error: {exc})"
         )
+
+
 
 
 if __name__ == "__main__":
@@ -133,3 +198,5 @@ if __name__ == "__main__":
         "said the next review will happen in December."
     )
     print(answer_question(demo_article, "What is the current interest rate?"))
+
+
