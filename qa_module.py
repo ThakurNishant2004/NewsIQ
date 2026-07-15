@@ -101,7 +101,7 @@ def _ask_anthropic(article_text: str, question: str,
 
 
     if not config.ANTHROPIC_API_KEY:
-        raise RuntimeError("ANTHROPIC_API_KEY is not set in the environment.")
+        raise RuntimeError("ANTHROPIC_API_KEY is not set in the  environment.")
 
 
     client = anthropic.Anthropic(api_key=config.ANTHROPIC_API_KEY)
