@@ -8,7 +8,7 @@ Primary method : Transformer-based classifier (DistilBERT fine-tuned
                   on SST-2) via HuggingFace `transformers`.
 Fallback method : VADER (Valence Aware Dictionary and sEntiment
                   Reasoner) from NLTK — a lightweight rule-based
-                  sentiment analyzer that works well on short text
+                  sentiment analyzer that works well on short  text
                   and requires no model download.
 """
 
